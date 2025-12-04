@@ -191,7 +191,7 @@ html_code = f"""
     <!-- 模态框 -->
     <div class="modal" id="review-modal">
         <div class="modal-content">
-            <h2 style="font-family:'Ma Shan Zheng'; margin: 5px 0 15px 0;">📜 成绩单</h2>
+            <h2 style="font-family:'Ma Shan Zheng'; margin: 5px 0 15px 0;">📜 金榜题名</h2>
             <table class="result-table">
                 <tr><td class="result-key">选手姓名:</td><td class="result-val">{current_user_name}</td></tr>
                 <tr><td class="result-key">网络 IP:</td><td class="result-val" id="result-ip">获取中...</td></tr>
