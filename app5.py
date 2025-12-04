@@ -35,7 +35,7 @@ if not st.session_state.current_user:
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown("<br><br><br>", unsafe_allow_html=True)
-        st.title("📜 青庭诗词大会报名处")
+        st.title("📜 青庭诗词大会")
         st.info("请留下大侠尊姓大名，即可开启挑战。")
         user_input = st.text_input("大侠尊姓大名：", placeholder="李太白")
         if st.button("开始挑战", type="primary", use_container_width=True):
