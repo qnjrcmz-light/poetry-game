@@ -49,13 +49,12 @@ if not st.session_state.current_user:
 current_user_name = st.session_state.current_user
 
 # ==========================================
-# 3. 数据准备 (读取真实 JSON 文件)
+# 3. 数据准备
 # ==========================================
 data_file = 'app_data.json'
 poets_data = []
 
 if not os.path.exists(data_file):
-    # 简单的 fallback 数据，防止没有文件时报错
     poets_data = [
         {"名字": "测试诗", "作者": "系统", "朝代": "唐", "content_1": "请先上传app_data.json", "content_2": "才能看到真实数据", "content_3": "床前明月光", "content_4": "疑是地上霜", "备注": ""}
     ] * 10
@@ -73,7 +72,7 @@ else:
 poets_json = json.dumps(poets_data, ensure_ascii=False)
 
 # ==========================================
-# 4. 前端代码块 (CSS 紧凑优化版)
+# 4. 前端代码块
 # ==========================================
 html_code = f"""
 <!DOCTYPE html>
@@ -94,21 +93,17 @@ html_code = f"""
             min-height: 100vh; color: var(--ink-black); overflow: hidden;
         }}
         
-        /* === 调整 1: 容器高度改为 92vh，留出一点余地 === */
         .app-container {{
             width: 100%; max-width: 600px; height: 92vh; background: var(--paper-bg);
             border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.2);
             display: flex; flex-direction: column; position: relative; border: 2px solid #d4d4d4;
         }}
         
-        /* === 调整 2: 状态栏 Padding 减小 === */
         .status-bar {{ padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; background: rgba(255,255,255,0.8); font-weight: bold; font-size: 0.95rem; }}
         .player-info {{ font-family: 'Ma Shan Zheng', cursive; color: #555; }}
         
-        /* === 调整 3: 游戏区域 Padding 减小 === */
         .game-area {{ flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 15px; overflow-y: auto; justify-content: center; }}
         
-        /* === 调整 4: 卡片高度从 220px -> 170px，Margin 减小 === */
         .card-container {{ width: 100%; height: 170px; perspective: 1000px; margin-bottom: 15px; cursor: pointer; flex-shrink: 0; }}
         .card {{ width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.8s; box-shadow: 0 8px 20px rgba(0,0,0,0.12); border-radius: 10px; }}
         .card.flipped {{ transform: rotateY(180deg); }}
@@ -117,21 +112,17 @@ html_code = f"""
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             border: 2px solid #333; background-color: #fffaf0; padding: 15px; text-align: center; border-radius: 10px;
         }}
-        
-        /* === 调整 5: 卡片字体调小 1.8rem -> 1.5rem === */
         .card-front {{ font-family: 'Ma Shan Zheng', cursive; font-size: 1.5rem; line-height: 1.3; }} 
         .card-back {{ transform: rotateY(180deg); background-color: #333; color: #fdfbf7; }}
         .card-back h2 {{ margin: 5px 0; font-size: 1.4rem; }}
         .card-back p {{ margin: 2px 0; font-size: 1rem; }}
         
-        /* === 调整 6: 选项 Grid 间距从 15px -> 8px === */
         .options-grid {{ width: 100%; display: grid; gap: 8px; flex-shrink: 0; }}
         
-        /* === 调整 7: 选项按钮 Padding 15px -> 12px，字体 1.1rem -> 1.0rem === */
         .option-btn {{
             background: white; border: 1px solid #888; padding: 12px; border-radius: 8px;
             font-size: 1.0rem; cursor: pointer; display: flex; align-items: center;
-            min-height: 48px; /* 保证触控区域 */
+            min-height: 48px;
         }}
         .option-tag {{ width: 22px; height: 22px; border-radius: 50%; background: #333; color: white; text-align: center; margin-right: 10px; flex-shrink: 0; line-height: 22px; font-size: 0.8rem; }}
         .option-btn.correct {{ background: #e8f5e9; border-color: var(--accent-green); color: var(--accent-green); }}
@@ -142,13 +133,27 @@ html_code = f"""
         .ctrl-btn:disabled {{ opacity: 0.5; }}
         .ctrl-btn.review {{ background: var(--accent-red); }}
 
-        /* 模态框样式维持原样 */
+        /* 模态框样式 */
         .modal {{ display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; padding: 20px; }}
         .modal-content {{ background: var(--paper-bg); padding: 25px; border-radius: 10px; width: 100%; max-height: 85vh; overflow-y: auto; text-align: center; border: 4px double var(--ink-black); }}
+        
         .result-table {{ margin: 10px auto; width: 100%; border-collapse: collapse; font-size: 0.9rem; }}
         .result-table td {{ padding: 6px; border-bottom: 1px solid #ccc; text-align: left; }}
         .result-key {{ font-weight: bold; width: 35%; color: #666; }}
         .result-val {{ font-weight: bold; color: var(--ink-black); }}
+        
+        /* === 新增：复盘控制栏样式 === */
+        .review-controls {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0 10px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ccc;
+        }}
+        .review-controls h3 {{ margin: 0; font-size: 1.1rem; color: #333; }}
+        .review-controls .ctrl-btn {{ font-size: 0.85rem; padding: 6px 15px; }}
+        
         .review-item {{ border-bottom: 1px dashed #ccc; padding: 8px 0; text-align: left; font-size: 0.9rem; }}
         .review-wrong {{ color: var(--accent-red); text-decoration: line-through; }}
         .review-right {{ color: var(--accent-green); }}
@@ -164,7 +169,6 @@ html_code = f"""
     <div style="text-align:center; background:#eee; font-size:0.75rem; padding: 2px;" id="timer">00:00</div>
 
     <div class="game-area">
-        <!-- 卡片区域 -->
         <div class="card-container" onclick="flipCard()">
             <div class="card" id="card">
                 <div class="card-face card-front">
@@ -178,7 +182,6 @@ html_code = f"""
                 </div>
             </div>
         </div>
-        <!-- 选项区域 -->
         <div class="options-grid" id="options-container"></div>
     </div>
 
@@ -191,22 +194,23 @@ html_code = f"""
     <!-- 模态框 -->
     <div class="modal" id="review-modal">
         <div class="modal-content">
-            <h2 style="font-family:'Ma Shan Zheng'; margin: 5px 0 15px 0;">📜 金榜题名</h2>
+            <h2 style="font-family:'Ma Shan Zheng'; margin: 5px 0 15px 0;">📜 成绩单</h2>
             <table class="result-table">
                 <tr><td class="result-key">选手姓名:</td><td class="result-val">{current_user_name}</td></tr>
                 <tr><td class="result-key">网络 IP:</td><td class="result-val" id="result-ip">获取中...</td></tr>
-                <tr><td class="result-key">通关时间:</td><td class="result-val" id="end-time"></td></tr>
+                <tr><td class="result-key">通关时刻:</td><td class="result-val" id="end-time"></td></tr>
                 <tr><td class="result-key">最终得分:</td><td class="result-val" id="final-score" style="color:var(--accent-red); font-size:1.2em;"></td></tr>
                 <tr><td class="result-key">答题耗时:</td><td class="result-val" id="final-time"></td></tr>
             </table>
-            <hr style="margin: 10px 0;">
-            <h3 style="margin: 5px 0;">错题复盘</h3>
-            <div id="review-list"></div>
-            <br>
-            <div style="display:flex; justify-content: space-around;">
-                <button class="ctrl-btn" onclick="location.reload()">再来一局</button>
-                <button class="ctrl-btn" onclick="closeModal()">关闭</button>
+
+            <!-- === 修改处：复盘控制栏 (左右按钮，中间标题) === -->
+            <div class="review-controls">
+                <button class="ctrl-btn" onclick="location.reload()" style="background:#555">↺ 再来一局</button>
+                <h3>错题复盘</h3>
+                <button class="ctrl-btn review" onclick="closeModal()">关闭 ✕</button>
             </div>
+            
+            <div id="review-list"></div>
         </div>
     </div>
 </div>
@@ -384,7 +388,7 @@ html_code = f"""
                 list.appendChild(item);
             }}
         }});
-        if(wrong===0) list.innerHTML = "<p style='color:green'>🎉 全对！太棒了！</p>";
+        if(wrong===0) list.innerHTML = "<p style='color:green; margin-top:10px;'>🎉 全对！太棒了！</p>";
         
         document.getElementById('review-modal').style.display = 'flex';
     }}
@@ -397,5 +401,4 @@ html_code = f"""
 </html>
 """
 
-# 减小 iframe 高度，防止底部有大片空白
 components.html(html_code, height=720, scrolling=False)
