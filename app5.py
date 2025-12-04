@@ -195,7 +195,7 @@ html_code = f"""
             <table class="result-table">
                 <tr><td class="result-key">选手姓名:</td><td class="result-val">{current_user_name}</td></tr>
                 <tr><td class="result-key">网络 IP:</td><td class="result-val" id="result-ip">获取中...</td></tr>
-                <tr><td class="result-key">通关时刻:</td><td class="result-val" id="end-time"></td></tr>
+                <tr><td class="result-key">通关时间:</td><td class="result-val" id="end-time"></td></tr>
                 <tr><td class="result-key">最终得分:</td><td class="result-val" id="final-score" style="color:var(--accent-red); font-size:1.2em;"></td></tr>
                 <tr><td class="result-key">答题耗时:</td><td class="result-val" id="final-time"></td></tr>
             </table>
