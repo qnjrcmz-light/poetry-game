@@ -1,0 +1,6 @@
+[client]
+toolbarMode = "viewer" # 隐藏右上角汉堡菜单的开发者选项
+
+[theme]
+base = "light" # 强制浅色模式
+primaryColor = "#b22c2c" #以此配合你的水墨红
